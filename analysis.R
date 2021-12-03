@@ -8,8 +8,8 @@
 # predict whether a vaccine developed for country Y will work in country X.
 # 
 # Usage notes: This script, supportingFunctions.R, and any country directories 
-# containing screeninf files must be located in the current working directory.
-# User must also have installed ggplot2, cowplot, and tidyverse.
+# containing screening files must be located in the current working directory.
+# User must also have installed ggplot2, cowplot, reshape2 and tidyverse.
 
 # Data must be labelled as screen_DDD.txt or .csv, and located in folders 
 # labeled with "country" followed by the country name (eg, countryX).
