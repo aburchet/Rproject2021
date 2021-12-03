@@ -69,7 +69,35 @@ compileCSV<- function(directories, na=3){
 
 summarize<-function(data, countryName="all"){
   # if no country name input, will use all data
-  # note - some of this doesn't make sense to me, make it work then come bakc and fix...
+
+  if (countryName=="all"){
+    data_countryName <- data
+    print("Summarizing data for all countries...")
+  }else{
+    data_countryName <- data[(data$country == countryName),]# subset of data that matches input country
+    print(paste("Summarizing data for country", countryName, "..."))
+  }
+    
+  pFemale<-100*sum(data_countryName$gender=="female")/nrow(data_countryName)
+  pMale<-100*sum(data_countryName$gender=="male")/nrow(data_countryName) # some might be NA, or neither in this column.
+  gender<-data.frame(group=c("Female", "Male"), percent=c(pFemale, pMale))
+  
+  genderpie<-ggplot(gender, aes(x="", y=percent, fill=group)) +
+                geom_bar(stat="identity", width=1) +
+                coord_polar("y", start=0)
+  
+  print(paste("Of all patients screened,",pFemale,"% were female and",pMale, "% were male."))
+  
+  age<-mean(data_countryName$age)
+  sd<-sd(data_countryName$age)
+  max<-max(data_countryName$age) # problem! max age is 423.....but that's in the given dataset too. 
+  min<- min(data_countryName$age)
+  print(paste("The average patient age was",age,"years, plus or minus", sd, "years."))
+  print(paste("The oldest patient was", max, "years old, and the youngest was", min, "years old."))
+  
+  ageplot<-ggplot(data_countryName, aes(x=age)) +  # note, this looks bad because the max age is 423 in the dataset...
+    geom_density() +
+    theme_classic()
   
   # For each row in the data inputted, denote whether that person was infected (1) or not (0)
   infected_patients <- numeric(length <- nrow(data))
@@ -79,13 +107,7 @@ summarize<-function(data, countryName="all"){
   
   #create a separate object for the country inputted to be able to look only at
   #the percent infected in this country
-  
-  # this is where could put if/else for all or some of data.
-  if (countryName=="all"){
-    data_countryName <- data
-  }else{
-    data_countryName <- data[(data$country == countryName),]# subset of data that matches input country
-  }
+
   #find the patients infected per each day in this country
   day <- data_countryName$dayofYear
   infected <- data_countryName$infected_patients
@@ -111,11 +133,19 @@ summarize<-function(data, countryName="all"){
     ylim(0, 100) +
     xlab("Day") +
     ylab("Percent Infected (%)") +
-    ggtitle("Country", countryName) +
+    # ggtitle("Country", countryName) +
     theme_classic()
   #return this scatterplot as the output of this function
-  return(country_countryName)
+  allPlot<-plot_grid(genderpie, ageplot, country_countryName, 
+                     labels=c("Patient Gender", "Age Distribution", "Percent Infected"))
+  
+  
+  return(allPlot)
 }
+
+# data<-read.csv("combinedScreeningData.csv)
+summarize(data, "Y")
+
 
 
 
