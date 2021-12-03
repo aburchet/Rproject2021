@@ -1,10 +1,8 @@
-
-
-# This script defines functions to convert files to .csv, combine them into one,
-# and
-
-library(ggplot2)
-library(cowplot)
+# Alice Burchett, Kayla Anderson, Alexis Waldschmidt
+# R Project
+# 12/3/2021
+# This script contains functions to convert, compile, and analyze infection screening
+# data, for use in analysis.R
 
 
 txt2csv<- function(directory){ 
@@ -70,10 +68,10 @@ compileCSV<- function(directories, na=3){
 
 
 summarize<-function(data, countryFolder){
-# Summarizes data and produces a figure with percent male and female patients, 
-# patient age distribution, and percent infected over time. 
-# Input dataframe should include all screening data in standard format from compileCSV(),
-# and input country folder vector should contain exactly two country folder names to be compared.
+  # Summarizes compiled data in terms of number of screens run, percent male and 
+  # female patients, patient age distribution, and percent infected over time. 
+  # Input dataframe should include all screening data in standard format from compileCSV(),
+  # and input country folder vector should contain exactly two country folder names to be compared.
 
     
   print(paste("Total number of screens run: ", nrow(data)))
